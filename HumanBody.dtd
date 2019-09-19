@@ -1,0 +1,109 @@
+<?xml version= "1.0" encoding="UTF-8"?>
+
+
+<!ELEMENT MainBody (Systems,Organs) >
+<!ATTLIST MainBody
+        bodyName CDATA #REQUIRED
+        bodyID CDATA #REQUIRED>
+
+<!ELEMENT Systems (System)+>
+<!ELEMENT System (Flow)+>
+<!ATTLIST System
+            name CDATA #REQUIRED
+            id CDATA #REQUIRED
+            type CDATA #REQUIRED>
+
+<!ELEMENT Flow (Connectible,Connections)>
+<!ATTLIST Flow
+            name CDATA #REQUIRED
+            id CDATA #REQUIRED>
+
+<!--<!ELEMENT Connectible ((Atrium+, Ventricle+)|(Artery+)|(Artery+, Vein+, Capillaries+)|(Vein+)|(Nose, AirConnectible+, Alveoli+)|
+                        (DigestiveTract+, StomachTract, DuodenumTract,DigestiveTract+, RectumTract, BiDuct, Duct+, DuctOverflowableJunction,Duct+, DeversingDuct, InnerGallbladder) |
+                        (SalivaryDuct+))>
+-->
+
+<!ELEMENT Connectible (Atrium | Ventricle | Artery | Vein | Capillaries | Nose | AirConnectible | Alveoli | DigestiveTract | StomachTract | DuodenumTract
+					| DigestiveTract | RectumTract | BiDuct | Duct | DuctOverflowableJunction | DeversingDuct| InnerGallbladder | SalivaryDuct)+>
+<!ENTITY % conAtt
+        "name CDATA #REQUIRED
+        id CDATA #REQUIRED
+        volume CDATA #IMPLIED
+        length CDATA #IMPLIED
+        startRadius CDATA #IMPLIED
+        endRadius CDATA #IMPLIED">
+
+<!ELEMENT Atrium EMPTY>
+<!ATTLIST Atrium %conAtt;>
+
+<!ELEMENT Ventricle EMPTY>
+<!ATTLIST Ventricle %conAtt;>
+
+<!ELEMENT Artery EMPTY>
+<!ATTLIST Artery %conAtt;>
+
+<!ELEMENT Vein EMPTY>
+<!ATTLIST Vein %conAtt;>
+
+<!ELEMENT Capillaries EMPTY>
+<!ATTLIST Capillaries %conAtt;>
+
+<!ELEMENT Nose EMPTY>
+<!ATTLIST Nose %conAtt;>
+
+<!ELEMENT AirConnectible EMPTY>
+<!ATTLIST AirConnectible %conAtt;>
+
+<!ELEMENT Alveoli EMPTY>
+<!ATTLIST Alveoli %conAtt;>
+
+<!ELEMENT DigestiveTract EMPTY>
+<!ATTLIST DigestiveTract %conAtt;>
+
+<!ELEMENT StomachTract EMPTY>
+<!ATTLIST StomachTract %conAtt;>
+
+<!ELEMENT DuodenumTract EMPTY>
+<!ATTLIST DuodenumTract %conAtt;>
+
+<!ELEMENT RectumTract EMPTY>
+<!ATTLIST RectumTract %conAtt;>
+
+<!ELEMENT BiDuct EMPTY>
+<!ATTLIST BiDuct %conAtt;>
+
+<!ELEMENT Duct EMPTY>
+<!ATTLIST Duct %conAtt;>
+
+<!ELEMENT DuctOverflowableJunction EMPTY>
+<!ATTLIST DuctOverflowableJunction %conAtt;>
+
+<!ELEMENT DeversingDuct EMPTY>
+<!ATTLIST DeversingDuct %conAtt;>
+
+<!ELEMENT InnerGallbladder EMPTY>
+<!ATTLIST InnerGallbladder %conAtt;>
+
+<!ELEMENT SalivaryDuct EMPTY>
+<!ATTLIST SalivaryDuct %conAtt;>
+
+
+
+<!ELEMENT Connections (Connection)*>
+
+<!ELEMENT Connection (to+)>
+<!ATTLIST Connection
+            id CDATA #REQUIRED>
+
+
+<!ELEMENT to EMPTY>
+<!ATTLIST to
+            id CDATA #REQUIRED>
+
+<!ELEMENT Organs (Organ)+>
+
+<!ELEMENT Organ EMPTY>
+<!ATTLIST Organ
+            name CDATA #REQUIRED
+            id CDATA #REQUIRED
+            systemID CDATA #REQUIRED>
