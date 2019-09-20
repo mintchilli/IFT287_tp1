@@ -11,12 +11,12 @@ import org.w3c.dom.Element;
 public class Flow {
 	private int id;
 	private String name;
-	private Connections connections;
 	private Connectible connectible;
+	private Connections connections;
 
 	public Flow(JsonObject jsonObject) {
-		name = jsonObject.getString("name");
 		id = jsonObject.getInt("id");
+		name = jsonObject.getString("name");
 		connectible = new Connectible(jsonObject.getJsonObject("Connectible"));
 
 		if (jsonObject.containsKey("Connections"))
@@ -24,8 +24,8 @@ public class Flow {
 	}
 
 	public Flow(String name, int id) {
-		this.name = name;
 		this.id = id;
+		this.name = name;
 	}
 
 	public void setConnectible(Connectible connectible) {
@@ -36,24 +36,24 @@ public class Flow {
 		this.connections = connections;
 	}
 
-	public JsonValue generateJson() {
-		JsonObjectBuilder job = Json.createObjectBuilder();
+	public JsonValue toJson() {
+		JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+		jsonObjectBuilder
+			.add("id", id)
+			.add("name", name)
+			.add("Connectible", connectible.toJson())
+			.add("Connections", connectible.toJson());
 
-		job.add("id", id).add("name", name).add("Connectible", connectible.generateJson()).add("Connections",
-				connectible.generateJson());
-
-		return job.build();
+		return jsonObjectBuilder.build();
 	}
 
-	public Element toXML(Document doc) {
-		Element element = doc.createElement("Flow");
-
-		element.setAttribute("name", name);
+	public Element toXML(Document document) {
+		Element element = document.createElement("Flow");
 		element.setAttribute("id", String.valueOf(id));
-
-		element.appendChild(connectible.toXML(doc));
+		element.setAttribute("name", name);
+		element.appendChild(connectible.toXML(document));
 		if (connections != null)
-			element.appendChild(connections.toXML(doc));
+			element.appendChild(connections.toXML(document));
 
 		return element;
 

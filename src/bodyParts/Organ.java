@@ -9,37 +9,38 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class Organ {
-	private String name;
 	private int id;
-	private int sysId;
+	private int systemID;
+	private String name;
 
 	public Organ(String name, int id, int systemID) {
-		this.name = name;
 		this.id = id;
-		this.sysId = systemID;
+		this.systemID = systemID;
+		this.name = name;
 	}
 
 	public Organ(JsonObject jsonObject) {
-		this.name = jsonObject.getString("name");
 		this.id = jsonObject.getInt("id");
-		this.sysId = jsonObject.getInt("systemID");
+		this.systemID = jsonObject.getInt("systemID");
+		this.name = jsonObject.getString("name");
 	}
 
-	public JsonValue generateJson() {
-		JsonObjectBuilder job = Json.createObjectBuilder();
+	public JsonValue toJson() {
+		JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+		jsonObjectBuilder
+			.add("id", id)
+			.add("systemID", systemID)
+			.add("name", name);
 
-		job.add("name", name).add("id", id).add("systemID", sysId);
-
-		return job.build();
+		return jsonObjectBuilder.build();
 	}
 	
-    public Element toXML(Document doc)
+    public Element toXML(Document document)
     {
-        Element element = doc.createElement("Organ");
-
-        element.setAttribute("name", name);
+        Element element = document.createElement("Organ");
         element.setAttribute("id", String.valueOf(id));
-        element.setAttribute("systemID", String.valueOf(sysId));
+        element.setAttribute("systemID", String.valueOf(systemID));
+        element.setAttribute("name", name);
 
         return element;
 

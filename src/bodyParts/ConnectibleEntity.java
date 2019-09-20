@@ -9,30 +9,30 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class ConnectibleEntity {
-	private String name;
 	private int id;
+	private String name;
+	private double endRadius;
+	private double startRadius;
 	private double volume;
 	private double length;
-	private double startRadius;
-	private double endRadius;
 
 	public ConnectibleEntity(String type, JsonObject jsonObject) {
-		name = jsonObject.getString("name");
 		id = jsonObject.getInt("id");
+		name = jsonObject.getString("name");
 
+		if (jsonObject.containsKey("endRadius"))
+			endRadius = jsonObject.getJsonNumber("endRadius").doubleValue();
+		if (jsonObject.containsKey("startRadius"))
+			startRadius = jsonObject.getJsonNumber("startRadius").doubleValue();
 		if (jsonObject.containsKey("volume"))
 			volume = jsonObject.getJsonNumber("volume").doubleValue();
 		if (jsonObject.containsKey("length"))
 			length = jsonObject.getJsonNumber("length").doubleValue();
-		if (jsonObject.containsKey("startRadius"))
-			startRadius = jsonObject.getJsonNumber("startRadius").doubleValue();
-		if (jsonObject.containsKey("endRadius"))
-			endRadius = jsonObject.getJsonNumber("endRadius").doubleValue();
 	}
 
 	public ConnectibleEntity(String name, int id) {
-		this.name = name;
 		this.id = id;
+		this.name = name;
 	}
 
 
@@ -52,40 +52,42 @@ public class ConnectibleEntity {
 		this.endRadius = endRadius;
 	}
 	
-	public JsonValue generateJson() {
-		JsonObjectBuilder job = Json.createObjectBuilder();
+	public JsonValue toJson() {
+		JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
 
-		job.add("name", name).add("id", id);
+		jsonObjectBuilder
+			.add("id", id)
+			.add("name", name);
 
-		if (volume != 0) {
-			job.add("volume", volume);
-		}
-		if (length != 0) {
-			job.add("length", length);
+		if (endRadius != 0) {
+			jsonObjectBuilder.add("endRadius", endRadius);
 		}
 		if (startRadius != 0) {
-			job.add("startRadius", startRadius);
+			jsonObjectBuilder.add("startRadius", startRadius);
 		}
-		if (endRadius != 0) {
-			job.add("endRadius", endRadius);
+		if (volume != 0) {
+			jsonObjectBuilder.add("volume", volume);
+		}
+		if (length != 0) {
+			jsonObjectBuilder.add("length", length);
 		}
 
-		return job.build();
+		return jsonObjectBuilder.build();
 	}
 	
-    public Element toXML(String type, Document doc)
+    public Element toXML(String type, Document document)
     {
-        Element element = doc.createElement(type);
-        element.setAttribute("name", name);
+        Element element = document.createElement(type);
         element.setAttribute("id", String.valueOf(id));
+        element.setAttribute("name", name);
+        if (endRadius != 0)
+        	element.setAttribute("endRadius", String.valueOf(endRadius));
+        if (startRadius != 0)
+        	element.setAttribute("startRadius", String.valueOf(startRadius));
         if (volume != 0)
             element.setAttribute("volume", String.valueOf(volume));
         if (length != 0)
             element.setAttribute("length", String.valueOf(length));
-        if (startRadius != 0)
-            element.setAttribute("startRadius", String.valueOf(startRadius));
-        if (endRadius != 0)
-            element.setAttribute("endRadius", String.valueOf(endRadius));
 
         return element;
     }

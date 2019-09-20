@@ -13,43 +13,39 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class Connections {
-	private ArrayList<Connection> connectionList;
+	private ArrayList<Connection> connectionArrayList;
 
 	public Connections(ArrayList<Connection> connections) {
-		this.connectionList = connections;
+		this.connectionArrayList = connections;
 	}
 
 	public Connections(JsonObject jsonObject) {
-		connectionList = new ArrayList<Connection>();
+		connectionArrayList = new ArrayList<Connection>();
 		if (jsonObject.containsKey("Connection")) {
 			JsonArray jsonArray = jsonObject.getJsonArray("Connection");
-			for (int i = 0; i < jsonArray.size(); i++) {
-				connectionList.add(new Connection(jsonArray.getJsonObject(i)));
+			for (int i = 0; i < jsonArray.size(); ++i) {
+				connectionArrayList.add(new Connection(jsonArray.getJsonObject(i)));
 			}
 		}
 	}
 
 	public JsonValue generateJson() {
-		JsonObjectBuilder job = Json.createObjectBuilder();
-		JsonArrayBuilder jab = Json.createArrayBuilder();
+		JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+		JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
 
-		for (Connection connection : connectionList) {
-			jab.add(connection.generateJson());
-		}
+		for (Connection connection : connectionArrayList)
+			jsonArrayBuilder.add(connection.toJson());
 
-		job.add("Connection", jab.build());
-
-		return job.build();
+		jsonObjectBuilder.add("Connection", jsonArrayBuilder.build());
+		return jsonObjectBuilder.build();
 	}
 	
     public Element toXML(Document doc)
     {
         Element element = doc.createElement("Connections");
 
-        for (Connection connection : connectionList)
-        {
+        for (Connection connection : connectionArrayList)
             element.appendChild(connection.toXML(doc));
-        }
 
         return element;
 

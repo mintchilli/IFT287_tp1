@@ -8,20 +8,19 @@ import org.w3c.dom.Element;
 
 public class MainBody {
 
-	private String mainBodyName;
-	private int id;
+	private int bodyID;
+	private String bodyName;
 	private Systems systems;
 	private Organs organs;
 
 	public MainBody(String bodyName, int bodyID) {
-		this.mainBodyName = bodyName;
-		this.id = bodyID;
+		this.bodyID = bodyID;
+		this.bodyName = bodyName;
 	}
 
 	public MainBody(JsonObject jsonObject) {
-		this.mainBodyName = jsonObject.getString("bodyName");
-		this.id = jsonObject.getInt("bodyID");
-
+		this.bodyID = jsonObject.getInt("bodyID");
+		this.bodyName = jsonObject.getString("bodyName");
 		this.systems = new Systems(jsonObject.getJsonObject("Systems"));
 		this.organs = new Organs(jsonObject.getJsonObject("Organs"));
 	}
@@ -34,18 +33,23 @@ public class MainBody {
 		this.organs = organs;
 	}
 
-	public JsonGenerator generateJson(JsonGenerator generator) {
-		return generator.writeStartObject("MainBody").write("bodyName", mainBodyName).write("bodyID", id).write("Systems", systems.generateJson()).write("Organs", organs.generateJson()).writeEnd();
+	public JsonGenerator toJson(JsonGenerator generator) {
+		return generator
+				.writeStartObject("MainBody")
+				.write("bodyID", bodyID)
+				.write("bodyName", bodyName)
+				.write("Systems", systems.toJson())
+				.write("Organs", organs.toJson())
+				.writeEnd();
 	}
 	
-    public Element toXML(Document doc)
+    public Element toXML(Document document)
     {
-        Element element = doc.createElement("MainBody");
-        element.setAttribute("bodyName", mainBodyName);
-        element.setAttribute("bodyID", String.valueOf(id));
-
-        element.appendChild(systems.toXML(doc));
-        element.appendChild(organs.toXML(doc));
+        Element element = document.createElement("MainBody");
+        element.setAttribute("bodyName", bodyName);
+        element.setAttribute("bodyID", String.valueOf(bodyID));
+        element.appendChild(systems.toXML(document));
+        element.appendChild(organs.toXML(document));
 
         return element;
     }

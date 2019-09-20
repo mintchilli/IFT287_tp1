@@ -20,15 +20,15 @@ public class Connection {
 		id = jsonObject.getInt("id");
 	}
 
-	public JsonValue generateJson() {
-		JsonObjectBuilder job = Json.createObjectBuilder();
-		job.add("id", id);
-		return job.build();
+	public JsonValue toJson() {
+		JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+		jsonObjectBuilder.add("id", id);
+		return jsonObjectBuilder.build();
 	}
 	
-    public Element toXML(Document doc)
+    public Element toXML(Document document)
     {
-        Element element = doc.createElement("Connection");
+        Element element = document.createElement("Connection");
         element.setAttribute("id", String.valueOf(id));
         return element;
 

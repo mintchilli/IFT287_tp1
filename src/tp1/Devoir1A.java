@@ -67,7 +67,7 @@ public class Devoir1A
             JsonGenerator jsonGenerator = Json.createGeneratorFactory(config).createGenerator(stringWriter);
 
             jsonGenerator.writeStartObject();
-            jsonGenerator = saxHandler.getMainBody().generateJson(jsonGenerator);
+            jsonGenerator = saxHandler.getMainBody().toJson(jsonGenerator);
             jsonGenerator.writeEnd();
             jsonGenerator.close();
 

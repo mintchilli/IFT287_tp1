@@ -29,26 +29,22 @@ public class Systems {
 		}
 	}
 
-	public JsonValue generateJson() {
-		JsonArrayBuilder jab = Json.createArrayBuilder();
-		JsonObjectBuilder job = Json.createObjectBuilder();
+	public JsonValue toJson() {
+		JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+		JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
 
-		for (System system : systems) {
-			jab.add(system.generateJson());
-		}
+		for (System system : systems)
+			jsonArrayBuilder.add(system.toJson());
 
-		job.add("System", jab.build());
-		return job.build();
+		jsonObjectBuilder.add("System", jsonArrayBuilder.build());
+		return jsonObjectBuilder.build();
 	}
 	
-    public Element toXML(Document doc)
+    public Element toXML(Document document)
     {
-        Element element = doc.createElement("Systems");
-
+        Element element = document.createElement("Systems");
         for (System systemType : systems)
-        {
-            element.appendChild(systemType.toXML(doc));
-        }
+            element.appendChild(systemType.toXML(document));
 
         return element;
     }

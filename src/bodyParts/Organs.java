@@ -14,39 +14,34 @@ import org.w3c.dom.Element;
 
 public class Organs {
 
-	private ArrayList<Organ> organList;
+	private ArrayList<Organ> organArrayList;
 
 	public Organs(ArrayList<Organ> organs) {
-		this.organList = organs;
+		this.organArrayList = organs;
 	}
 
 	public Organs(JsonObject jsonObject) {
-		organList = new ArrayList<Organ>();
+		organArrayList = new ArrayList<Organ>();
 		JsonArray jsonArray = jsonObject.getJsonArray("Organ");
-		for (int i = 0; i < jsonArray.size(); i++) {
-			organList.add(new Organ(jsonArray.getJsonObject(i)));
-		}
+		for (int i = 0; i < jsonArray.size(); ++i)
+			organArrayList.add(new Organ(jsonArray.getJsonObject(i)));
 	}
 
-	public JsonValue generateJson() {
-		JsonObjectBuilder job = Json.createObjectBuilder();
-		JsonArrayBuilder jab = Json.createArrayBuilder();
+	public JsonValue toJson() {
+		JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+		JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
 
-		for (Organ organ : organList) {
-			jab.add(organ.generateJson());
-		}
-		job.add("Organ", jab.build());
-
-		return job.build();
+		for (Organ organ : organArrayList)
+			jsonArrayBuilder.add(organ.toJson());
+		jsonObjectBuilder.add("Organ", jsonArrayBuilder.build());
+		
+		return jsonObjectBuilder.build();
 	}
 	
-	public Element toXML(Document doc) {
-        Element element = doc.createElement("Organs");
-        
-        for (Organ organ : organList)
-        {
-            element.appendChild(organ.toXML(doc));
-        }
+	public Element toXML(Document document) {
+        Element element = document.createElement("Organs");
+        for (Organ organ : organArrayList)
+            element.appendChild(organ.toXML(document));
         
         return element;
         
