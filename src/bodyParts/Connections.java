@@ -13,18 +13,18 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class Connections {
-	private ArrayList<Connection> connections;
+	private ArrayList<Connection> connectionList;
 
 	public Connections(ArrayList<Connection> connections) {
-		this.connections = connections;
+		this.connectionList = connections;
 	}
 
 	public Connections(JsonObject jsonObject) {
-		connections = new ArrayList<Connection>();
+		connectionList = new ArrayList<Connection>();
 		if (jsonObject.containsKey("Connection")) {
 			JsonArray jsonArray = jsonObject.getJsonArray("Connection");
 			for (int i = 0; i < jsonArray.size(); i++) {
-				connections.add(new Connection(jsonArray.getJsonObject(i)));
+				connectionList.add(new Connection(jsonArray.getJsonObject(i)));
 			}
 		}
 	}
@@ -33,7 +33,7 @@ public class Connections {
 		JsonObjectBuilder job = Json.createObjectBuilder();
 		JsonArrayBuilder jab = Json.createArrayBuilder();
 
-		for (Connection connection : connections) {
+		for (Connection connection : connectionList) {
 			jab.add(connection.generateJson());
 		}
 
@@ -46,7 +46,7 @@ public class Connections {
     {
         Element element = doc.createElement("Connections");
 
-        for (Connection connection : connections)
+        for (Connection connection : connectionList)
         {
             element.appendChild(connection.toXML(doc));
         }

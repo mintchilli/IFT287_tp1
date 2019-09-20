@@ -8,7 +8,7 @@ import javax.json.JsonValue;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class ConnectibleChild {
+public class ConnectibleEntity {
 	private String name;
 	private int id;
 	private double volume;
@@ -16,7 +16,7 @@ public class ConnectibleChild {
 	private double startRadius;
 	private double endRadius;
 
-	public ConnectibleChild(String type, JsonObject jsonObject) {
+	public ConnectibleEntity(String type, JsonObject jsonObject) {
 		name = jsonObject.getString("name");
 		id = jsonObject.getInt("id");
 
@@ -30,7 +30,7 @@ public class ConnectibleChild {
 			endRadius = jsonObject.getJsonNumber("endRadius").doubleValue();
 	}
 
-	public ConnectibleChild(String name, int id) {
+	public ConnectibleEntity(String name, int id) {
 		this.name = name;
 		this.id = id;
 	}

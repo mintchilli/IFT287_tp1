@@ -9,18 +9,18 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class Flow {
-	private String name;
 	private int id;
+	private String name;
 	private Connections connections;
 	private Connectible connectible;
 
 	public Flow(JsonObject jsonObject) {
-		this.name = jsonObject.getString("name");
-		this.id = jsonObject.getInt("id");
-		this.connectible = new Connectible(jsonObject.getJsonObject("Connectible"));
+		name = jsonObject.getString("name");
+		id = jsonObject.getInt("id");
+		connectible = new Connectible(jsonObject.getJsonObject("Connectible"));
 
 		if (jsonObject.containsKey("Connections"))
-			this.connections = new Connections(jsonObject.getJsonObject("Connections"));
+			connections = new Connections(jsonObject.getJsonObject("Connections"));
 	}
 
 	public Flow(String name, int id) {

@@ -60,60 +60,34 @@ public class Devoir1B
         
         System.out.println("Debut de la conversion du fichier " + nomFichierJSON + " vers le fichier " + nomFichierXML);
 
-        // Lecture
         MainBody mainBody = null;
         try
         {
-            mainBody = lecture(args[0]);
+            mainBody = new MainBody(((JsonObject) Json.createReader(new FileReader(args[0])).read()).getJsonObject("MainBody"));
         }
-        catch (FileNotFoundException e1)
+        catch (Exception e)
         {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+            e.printStackTrace();
         }
 
-        // Écriture
         try
-        {
-            ecriture(args[1], "HumanBody.dtd", mainBody);
+        {   
+            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+            document.appendChild(mainBody.toXML(document));
+            
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            
+            transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "HumanBody.dtd");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+            transformer.transform(new DOMSource(document), new StreamResult(new PrintStream(new FileOutputStream(args[1]))));
         }
-        catch (FileNotFoundException | ParserConfigurationException | TransformerException e)
+        catch (Exception e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
         System.out.println("Conversion terminee.");
 
     }
-    
-    private static MainBody lecture(String nomFichier) throws FileNotFoundException
-    {
-        JsonReader reader = Json.createReader(new FileReader(nomFichier));
-        JsonStructure jsonst = reader.read();
-        return new MainBody(((JsonObject) jsonst).getJsonObject("MainBody"));
-
-    }
-    
-    private static void ecriture(String nomFichier, String dtdName, MainBody mainBody)
-            throws ParserConfigurationException, FileNotFoundException, TransformerException
-    {
-
-        DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
-        Document document = f.newDocumentBuilder().newDocument();
-        document.appendChild(mainBody.toXML(document));
-
-        FileOutputStream output = new FileOutputStream(nomFichier);
-        PrintStream out = new PrintStream(output);
-        TransformerFactory transFacto = TransformerFactory.newInstance();
-        Transformer transformer = transFacto.newTransformer();
-        transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, dtdName);
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-        DOMSource source = new DOMSource(document);
-        StreamResult result = new StreamResult(out);
-        transformer.transform(source, result);
-
-    }
-
 }

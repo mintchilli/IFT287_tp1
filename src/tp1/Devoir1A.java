@@ -52,26 +52,28 @@ public class Devoir1A
 
         try
         {
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            factory.setValidating(true);
-            SAXParser saxParser = factory.newSAXParser();
-            SAXHandler handler = new SAXHandler();
-            saxParser.parse(nomFichierXML, handler);
+            SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+            parserFactory.setValidating(true);
+            SAXParser saxParser = parserFactory.newSAXParser();
+            SAXHandler saxHandler = new SAXHandler();
+            
+            saxParser.parse(nomFichierXML, saxHandler);
 
             Map<String, Object> config = new HashMap<String, Object>(1);
             config.put(JsonGenerator.PRETTY_PRINTING, true);
-            StringWriter w = new StringWriter();
-            JsonGeneratorFactory f = Json.createGeneratorFactory(config);
-            JsonGenerator jsonGenerator = f.createGenerator(w);
+            
+            StringWriter stringWriter = new StringWriter();
+            
+            JsonGenerator jsonGenerator = Json.createGeneratorFactory(config).createGenerator(stringWriter);
 
             jsonGenerator.writeStartObject();
-            jsonGenerator = handler.returnMainBody().generateJson(jsonGenerator);
+            jsonGenerator = saxHandler.getMainBody().generateJson(jsonGenerator);
             jsonGenerator.writeEnd();
             jsonGenerator.close();
 
-            BufferedWriter writer = new BufferedWriter(new FileWriter(nomFichierJSON));
-            writer.write(w.toString());
-            writer.close();
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(nomFichierJSON));
+            bufferedWriter.write(stringWriter.toString());
+            bufferedWriter.close();
         }
         catch (Exception e)
         {

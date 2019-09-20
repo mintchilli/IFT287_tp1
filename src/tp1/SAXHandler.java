@@ -1,157 +1,147 @@
 package tp1;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
+import java.util.Hashtable;
 
-import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
-import bodyParts.Connectible;
-import bodyParts.ConnectibleChild;
+import bodyParts.ConnectibleEntity;
 import bodyParts.Connection;
+import bodyParts.Connectible;
 import bodyParts.Connections;
-import bodyParts.Flow;
 import bodyParts.MainBody;
-import bodyParts.Organ;
-import bodyParts.Organs;
 import bodyParts.Systems;
 import bodyParts.System;
-import bodyParts.To;
+import bodyParts.Flow;
+import bodyParts.Organs;
+import bodyParts.Organ;
 
 public class SAXHandler extends DefaultHandler {
 
-	private MainBody mainBody;
-	private ArrayList<System> systemList = new ArrayList<System>();
-	private System system;
-	private ArrayList<Flow> flowList = new ArrayList<Flow>();
-	private Flow flow;
-	private Hashtable<String, List<ConnectibleChild>> connectibleChildListList = new Hashtable<String, List<ConnectibleChild>>();
-	private boolean newFlow;
 	private String connectibleName;
-	private List<ConnectibleChild> connectibleChildList = new ArrayList<ConnectibleChild>();
-	private ConnectibleChild connectibleChild;
-	private ArrayList<Connection> connectionList = new ArrayList<Connection>();
 	private Connection connection;
-	private ArrayList<To> toList = new ArrayList<To>();
-	private To to;
-	private ArrayList<Organ> organList = new ArrayList<Organ>();
+	private ArrayList<Connection> connectionArrayList = new ArrayList<Connection>();
+	private MainBody mainBody;
+	private System system;
+	private ArrayList<System> systemArrayList = new ArrayList<System>();
+	private Flow flow;
+	private boolean newFlow;
+	private ArrayList<Flow> flowArrayList = new ArrayList<Flow>();
+	private ConnectibleEntity connectibleEntity;
 	private Organ organ;
+	private ArrayList<Organ> organArrayList = new ArrayList<Organ>();
+	private List<ConnectibleEntity> connectibleEntityArrayList = new ArrayList<ConnectibleEntity>();
+	private Hashtable<String, List<ConnectibleEntity>> connectibleEntityListHashtable = new Hashtable<String, List<ConnectibleEntity>>();
 
 	@Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
+    public void startElement(String uri, String localName, String element, Attributes attributes) throws SAXException
     {
-        if (qName == "MainBody")
-        {
-            mainBody = new MainBody(attributes.getValue("bodyName"), Integer.parseInt(attributes.getValue("bodyID")));
-
-        }
-
-        else if (qName == "System")
-        {
-            system = new System(attributes.getValue("name"), Integer.parseInt(attributes.getValue("id")),
+		switch (element) {
+		case "MainBody":
+			mainBody = new MainBody(attributes.getValue("bodyName"), Integer.parseInt(attributes.getValue("bodyID")));
+			break;
+			
+		case "System":
+			system = new System(attributes.getValue("name"), Integer.parseInt(attributes.getValue("id")),
                     Integer.parseInt(attributes.getValue("type")));
-        }
-
-        else if (qName == "Flow")
-        {
-            flow = new Flow(attributes.getValue("name"), Integer.parseInt(attributes.getValue("id")));
+			break;
+			
+		case "Flow":
+			flow = new Flow(attributes.getValue("name"), Integer.parseInt(attributes.getValue("id")));
             newFlow = true;
-        }
+			break;
+			
+		case "Connection":
+			connection = new Connection(Integer.parseInt(attributes.getValue("id")));
+			break;
+			
+		case "Organ":
+			organ = new Organ(attributes.getValue("name"), Integer.parseInt(attributes.getValue("id")),
+                    Integer.parseInt(attributes.getValue("systemID")));
+            organArrayList.add(organ);
+            break;
+		}
 
-        else if (qName == "Atrium" || qName == "Ventricle" || qName == "Artery" || qName == "Vein"
-                || qName == "Capillaries" || qName == "Nose" || qName == "AirConnectible" || qName == "Alveoli"
-                || qName == "DigestiveTract" || qName == "StomachTract" || qName == "DuodenumTract"
-                || qName == "DigestiveTract" || qName == "RectumTract" || qName == "BiDuct" || qName == "Duct"
-                || qName == "DuctOverflowableJunction" || qName == "DeversingDuct" || qName == "InnerGallbladder"
-                || qName == "SalivaryDuct")
+        if (element == "Atrium" || element == "Ventricle" || element == "Artery" 
+        		|| element == "Vein" || element == "Capillaries" || element == "Alveoli" 
+        		|| element == "AirConnectible" || element == "Nose" || element == "DeversingDuct" 
+        		|| element == "StomachTract" || element == "RectumTract" || element == "DigestiveTract" 
+        		|| element == "InnerGallbladder" || element == "Duct" || element == "BiDuct"
+                || element == "DuodenumTract" || element == "DuctOverflowableJunction" || element == "SalivaryDuct")
         {
-            if (newFlow || qName != connectibleName)
+            if (newFlow || element != connectibleName)
             {
-                connectibleName = qName;
-                connectibleChildList = new ArrayList<ConnectibleChild>();
+                connectibleName = element;
+                connectibleEntityArrayList = new ArrayList<ConnectibleEntity>();
                 newFlow = false;
             }
 
-            connectibleChild = new ConnectibleChild(attributes.getValue("name"),
+            connectibleEntity = new ConnectibleEntity(attributes.getValue("name"),
                     Integer.parseInt(attributes.getValue("id")));
 
             if (attributes.getValue("volume") != null)
-            {
-                connectibleChild.setVolume(Double.parseDouble(attributes.getValue("volume")));
-            }
+                connectibleEntity.setVolume(Double.parseDouble(attributes.getValue("volume")));
+            
             if (attributes.getValue("length") != null)
-            {
-                connectibleChild.setLength(Double.parseDouble(attributes.getValue("length")));
-            }
+                connectibleEntity.setLength(Double.parseDouble(attributes.getValue("length")));
+            
             if (attributes.getValue("startRadius") != null)
-            {
-                connectibleChild.setStartRadius(Double.parseDouble(attributes.getValue("startRadius")));
-            }
+                connectibleEntity.setStartRadius(Double.parseDouble(attributes.getValue("startRadius")));
+            
             if (attributes.getValue("endRadius") != null)
-            {
-                connectibleChild.setEndRadius(Double.parseDouble(attributes.getValue("endRadius")));
-            }
+                connectibleEntity.setEndRadius(Double.parseDouble(attributes.getValue("endRadius")));
 
-            connectibleChildList.add(connectibleChild);
-        }
-
-        else if (qName == "Connection")
-        {
-            connection = new Connection(Integer.parseInt(attributes.getValue("id")));
-        }
-
-        else if (qName == "to")
-        {
-            to = new To(Integer.parseInt(attributes.getValue("id")));
-            toList.add(to);
-        }
-
-        else if (qName == "Organ")
-        {
-            organ = new Organ(attributes.getValue("name"), Integer.parseInt(attributes.getValue("id")),
-                    Integer.parseInt(attributes.getValue("systemID")));
-
-            organList.add(organ);
+            connectibleEntityArrayList.add(connectibleEntity);
         }
     }
 
 	@Override
-	public void endElement(String uri, String localName, String qName) throws SAXException {
-		if (qName == "Systems") {
-			mainBody.setSystems(new Systems(systemList));
-		} else if (qName == "System") {
-			system.setFlows(flowList);
-			systemList.add(system);
-			flowList = new ArrayList<Flow>();
-		} else if (qName == "Flow") {
-			flowList.add(flow);
-		} else if (qName == "Connectible") {
-			flow.setConnectible(new Connectible(connectibleChildListList));
-			connectibleChildListList = new Hashtable<String, List<ConnectibleChild>>();
-		} else if (qName == "Atrium" || qName == "Ventricle" || qName == "Artery" || qName == "Vein"
-				|| qName == "Capillaries" || qName == "Nose" || qName == "AirConnectible" || qName == "Alveoli"
-				|| qName == "DigestiveTract" || qName == "StomachTract" || qName == "DuodenumTract"
-				|| qName == "DigestiveTract" || qName == "RectumTract" || qName == "BiDuct" || qName == "Duct"
-				|| qName == "DuctOverflowableJunction" || qName == "DeversingDuct" || qName == "InnerGallbladder"
-				|| qName == "SalivaryDuct") {
-			connectibleChildListList.put(qName, connectibleChildList);
-		} else if (qName == "Connection") {
-			connection.setTos(toList);
-			connectionList.add(connection);
-			toList = new ArrayList<To>();
-		} else if (qName == "To") {
-			toList.add(to);
-		} else if (qName == "Connections") {
-			flow.setConnections(new Connections(connectionList));
-			connectionList = new ArrayList<Connection>();
-		} else if (qName == "Organs") {
-			mainBody.setOrgans(new Organs(organList));
+	public void endElement(String uri, String localName, String element) throws SAXException {
+		
+		switch (element)
+		{
+		case "System":
+			system.setFlows(flowArrayList);
+			systemArrayList.add(system);
+			flowArrayList = new ArrayList<Flow>();
+			break;
+		
+		case "Systems":
+			mainBody.setSystems(new Systems(systemArrayList));
+			break;
+			
+		case "Flow":
+			flowArrayList.add(flow);
+			break;
+			
+		case "Connections":
+			flow.setConnections(new Connections(connectionArrayList));
+			connectionArrayList = new ArrayList<Connection>();
+			break;
+			
+		case "Connectible":
+			flow.setConnectible(new Connectible(connectibleEntityListHashtable));
+			connectibleEntityListHashtable = new Hashtable<String, List<ConnectibleEntity>>();
+			break;
+		
+		case "Organs":
+			mainBody.setOrgans(new Organs(organArrayList));
+			break;
 		}
+		
+		if (element == "Atrium" || element == "Ventricle" || element == "Artery" 
+        		|| element == "Vein" || element == "Capillaries" || element == "Alveoli" 
+        		|| element == "AirConnectible" || element == "Nose" || element == "DeversingDuct" 
+        		|| element == "StomachTract" || element == "RectumTract" || element == "DigestiveTract" 
+        		|| element == "InnerGallbladder" || element == "Duct" || element == "BiDuct"
+                || element == "DuodenumTract" || element == "DuctOverflowableJunction" || element == "SalivaryDuct")
+			connectibleEntityListHashtable.put(element, connectibleEntityArrayList);
 	}
 
-	public MainBody returnMainBody() {
+	public MainBody getMainBody() {
 		return mainBody;
 	}
 
