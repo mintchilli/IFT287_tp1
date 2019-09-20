@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+	<xsd:element name="MainBody">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="Systems" type="Systems" />
+				<xsd:element name="Organs" type="Organs" />
+			</xsd:sequence>
+			<xsd:attribute name="bodyName" type="xsd:string" use="required" />
+			<xsd:attribute name="bodyID" type="xsd:integer" use="required" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:complexType name="Systems">
+		<xsd:sequence>
+			<xsd:element name="System" type="System"
+                minOccurs="0" maxOccurs="unbounded" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="System">
+		<xsd:sequence>
+			<xsd:element name="Flow" type="Flow"
+                minOccurs="0" maxOccurs="unbounded" />
+		</xsd:sequence>
+        <xsd:attribute name="id" type="xsd:integer" use="required" />
+		<xsd:attribute name="name" type="xsd:string" use="required" />
+		<xsd:attribute name="type" type="xsd:string" use="required" />
+	</xsd:complexType>
+
+	<xsd:complexType name="Flow">
+		<xsd:sequence>
+			<xsd:element name="Connectible" type="Connectible" />
+			<xsd:element name="Connections" type="Connections" />
+		</xsd:sequence>
+        <xsd:attribute name="id" type="xsd:integer" use="required" />
+		<xsd:attribute name="name" type="xsd:string" use="required" />
+	</xsd:complexType>
+
+    <xsd:complexType name="Connectible">
+		<xsd:choice minOccurs="0" maxOccurs="unbounded">
+			<xsd:element name="Atrium" type="ConnectibleEntity" />
+			<xsd:element name="Ventricle" type="ConnectibleEntity" />
+			<xsd:element name="Artery" type="ConnectibleEntity" />
+			<xsd:element name="Vein" type="ConnectibleEntity" />
+			<xsd:element name="Capillaries" type="ConnectibleEntity" />
+			<xsd:element name="Alveoli" type="ConnectibleEntity" />
+			<xsd:element name="AirConnectible" type="ConnectibleEntity" />
+			<xsd:element name="Nose" type="ConnectibleEntity" />
+			<xsd:element name="DeversingDuct" type="ConnectibleEntity" />
+			<xsd:element name="StomachTract" type="ConnectibleEntity" />
+			<xsd:element name="RectumTract" type="ConnectibleEntity" />
+			<xsd:element name="DigestiveTract" type="ConnectibleEntity" />
+			<xsd:element name="InnerGallbladder" type="ConnectibleEntity" />
+			<xsd:element name="Duct" type="ConnectibleEntity" />
+			<xsd:element name="BiDuct" type="ConnectibleEntity" />
+			<xsd:element name="DuodenumTract" type="ConnectibleEntity" />
+			<xsd:element name="DuctOverflowableJunction" type="ConnectibleEntity" />
+			<xsd:element name="SalivaryDuct" type="ConnectibleEntity" />
+		</xsd:choice>
+	</xsd:complexType>
+
+
+	<xsd:complexType name="ConnectibleEntity">
+		<xsd:attribute name="name" type="xsd:string" use="required" />
+		<xsd:attribute name="id" type="xsd:integer" use="required" />
+		<xsd:attribute name="volume" type="xsd:double" use="optional" />
+		<xsd:attribute name="length" type="xsd:double" use="optional" />
+		<xsd:attribute name="startRadius" type="xsd:double" use="optional" />
+		<xsd:attribute name="endRadius" type="xsd:double" use="optional" />
+	</xsd:complexType>
+
+	<xsd:complexType name="Connections"/>
+
+	<xsd:complexType name="Organs">
+		<xsd:sequence>
+			<xsd:element name="Organ" type="Organ"
+                minOccurs="0" maxOccurs="unbounded" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="Organ">
+        <xsd:attribute name="id" type="xsd:integer" use="required" />
+		<xsd:attribute name="name" type="xsd:string" use="required" />
+		<xsd:attribute name="systemID" type="xsd:integer" use="required" />
+	</xsd:complexType>
+
+	
+
+
+</xsd:schema>
